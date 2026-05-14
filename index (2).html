@@ -203,14 +203,12 @@ function loadMore() {
   chunk.forEach(item => {
     const card = document.createElement('div');
     card.className = 'card';
-    // Extract full ID from URL and use local images folder
+    // Use local images folder only - extract full ID from URL
     let imgUrl = item.url;
-    if (imgUrl && imgUrl.includes('/')) {
-      // Extract the full ID from the URL path
-      const parts = imgUrl.split('/');
-      const fullId = parts[parts.length - 2]; // Get the folder name which is the full ID
-      imgUrl = `images/${fullId}_${item.year}.jpg`;
-    }
+    const parts = imgUrl.split('/');
+    const fullId = parts[parts.length - 2]; // Get the folder name which is the full ID
+    imgUrl = `images/${fullId}_${item.year}.jpg`;
+    
     card.innerHTML = `
       <img src="${imgUrl}" alt="ID ${item.id}" loading="lazy"
            onerror="this.src='https://via.placeholder.com/150x160?text=No+Image'; this.classList.add('error')">
