@@ -342,6 +342,8 @@
             try {
                 const response = await fetch('db.json');
                 allStudents = await response.json();
+                // Convert to array for easier filtering
+                allStudents = Object.values(allStudents);
                 filteredStudents = [...allStudents];
                 
                 populateFilters();
@@ -360,7 +362,7 @@
             const years = new Set();
             const levels = new Set();
 
-            Object.values(allStudents).forEach(student => {
+            allStudents.forEach(student => {
                 Object.values(student.years || {}).forEach(yearInfo => {
                     if (yearInfo.p) programs.add(yearInfo.p);
                     if (yearInfo.l) levels.add(yearInfo.l);
@@ -398,7 +400,7 @@
 
         // Update statistics
         function updateStats() {
-            document.getElementById('totalStudents').textContent = Object.keys(allStudents).length;
+            document.getElementById('totalStudents').textContent = allStudents.length;
             document.getElementById('displayedStudents').textContent = filteredStudents.length;
         }
 
@@ -449,7 +451,7 @@
             document.getElementById('levelFilter').value = '';
             document.getElementById('searchFilter').value = '';
             
-            filteredStudents = [...Object.values(allStudents)];
+            filteredStudents = [...allStudents];
             updateStats();
             displayStudents();
         }
@@ -465,7 +467,7 @@
                 return;
             }
 
-            resultsInfo.textContent = `عرض ${filteredStudents.length} من ${Object.keys(allStudents).length} طالب`;
+            resultsInfo.textContent = `عرض ${filteredStudents.length} من ${allStudents.length} طالب`;
 
             tbody.innerHTML = filteredStudents.map(student => {
                 const latestYear = getLatestYear(student);
@@ -473,10 +475,16 @@
                 
                 const gradeClass = getGradeClass(student.cum && student.cum.letter);
                 
+                // Convert HTTP image URL to HTTPS using img-proxy
+                let imgUrl = student.img || '';
+                if (imgUrl && imgUrl.startsWith('http://')) {
+                    imgUrl = imgUrl.replace('http://', '/img-proxy/');
+                }
+                
                 return `
                     <tr>
                         <td>
-                            <img src="${student.img || ''}" alt="صورة الطالب" class="student-img" 
+                            <img src="${imgUrl}" alt="صورة الطالب" class="student-img" 
                                  onerror="this.src='https://via.placeholder.com/60?text=?'">
                         </td>
                         <td>${student.id || '-'}</td>
