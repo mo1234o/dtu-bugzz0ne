@@ -1,0 +1,44 @@
+# InfinityFree configuration — Student Portal
+
+# ══════════════════════════════════════
+# IMAGE PROXY: bypass mixed-content blocking
+# Redirects /img-proxy/path -> http://193.227.50.84/path
+# ══════════════════════════════════════
+RewriteEngine On
+RewriteRule ^img-proxy/(.*)$ http://193.227.50.84/$1 [L,R=302]
+
+# ══════════════════════════════════════
+# SECURITY HEADERS
+# ══════════════════════════════════════
+<IfModule mod_headers.c>
+  Header set X-Frame-Options "DENY"
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "no-referrer"
+  Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  
+  # Cache control for JSON files
+  <FilesMatch "\.(json)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate"
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+  </FilesMatch>
+  
+  # CORS for img-proxy
+  <FilesMatch "^img-proxy/">
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET"
+    Header set Cache-Control "public, max-age=3600"
+  </FilesMatch>
+</IfModule>
+
+# ══════════════════════════════════════
+# COMPRESSION
+# ══════════════════════════════════════
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# ══════════════════════════════════════
+# DEFAULT DOCUMENT
+# ══════════════════════════════════════
+DirectoryIndex index.html
