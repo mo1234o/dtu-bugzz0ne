@@ -203,10 +203,13 @@ function loadMore() {
   chunk.forEach(item => {
     const card = document.createElement('div');
     card.className = 'card';
-    // Convert HTTP to HTTPS using img-proxy
+    // Extract full ID from URL and use local images folder
     let imgUrl = item.url;
-    if (imgUrl && imgUrl.startsWith('http://')) {
-      imgUrl = imgUrl.replace('http://', '/img-proxy/');
+    if (imgUrl && imgUrl.includes('/')) {
+      // Extract the full ID from the URL path
+      const parts = imgUrl.split('/');
+      const fullId = parts[parts.length - 2]; // Get the folder name which is the full ID
+      imgUrl = `images/${fullId}_${item.year}.jpg`;
     }
     card.innerHTML = `
       <img src="${imgUrl}" alt="ID ${item.id}" loading="lazy"
