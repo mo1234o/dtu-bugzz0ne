@@ -237,6 +237,69 @@ function updateCount() {
 
 // Init
 applyFilters();
+
+// Security: Disable copy, paste, cut, and context menu
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+  return false;
+});
+
+document.addEventListener('copy', function(e) {
+  e.preventDefault();
+  return false;
+});
+
+document.addEventListener('paste', function(e) {
+  e.preventDefault();
+  return false;
+});
+
+document.addEventListener('cut', function(e) {
+  e.preventDefault();
+  return false;
+});
+
+// Security: Disable drag and drop for images
+document.addEventListener('dragstart', function(e) {
+  if (e.target.tagName === 'IMG') {
+    e.preventDefault();
+    return false;
+  }
+});
+
+document.addEventListener('drop', function(e) {
+  e.preventDefault();
+  return false;
+});
+
+// Security: Disable keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+  // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C (Developer Tools)
+  if (e.key === 'F12' || 
+      (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+      (e.ctrlKey && e.key === 'U') || // View Source
+      (e.ctrlKey && e.key === 'S') || // Save
+      (e.ctrlKey && e.key === 'C') || // Copy
+      (e.ctrlKey && e.key === 'V') || // Paste
+      (e.ctrlKey && e.key === 'X') || // Cut
+      (e.ctrlKey && e.key === 'A') || // Select All
+      (e.ctrlKey && e.key === 'P') || // Print
+      (e.ctrlKey && e.key === 'F') || // Find
+      (e.metaKey && e.key === 'C') || // Copy (Mac)
+      (e.metaKey && e.key === 'V') || // Paste (Mac)
+      (e.metaKey && e.key === 'A')) { // Select All (Mac)
+    e.preventDefault();
+    return false;
+  }
+});
+
+// Security: Disable right-click on images
+document.addEventListener('mousedown', function(e) {
+  if (e.button === 2 && e.target.tagName === 'IMG') {
+    e.preventDefault();
+    return false;
+  }
+});
 </script>
 </body>
 </html>
